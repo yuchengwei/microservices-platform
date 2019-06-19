@@ -68,7 +68,8 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
         return getLoginAppUser(sysUser);
     }
 
-    private LoginAppUser getLoginAppUser(SysUser sysUser) {
+    @Override
+    public LoginAppUser getLoginAppUser(SysUser sysUser) {
         if (sysUser != null) {
             LoginAppUser loginAppUser = new LoginAppUser();
             BeanUtils.copyProperties(sysUser, loginAppUser);
@@ -126,7 +127,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserMapper, SysUser>
     @Override
     public SysUser selectByOpenId(String openId) {
         List<SysUser> users = baseMapper.selectList(
-                new QueryWrapper<SysUser>().eq("openId", openId)
+                new QueryWrapper<SysUser>().eq("open_id", openId)
         );
         return getUser(users);
     }

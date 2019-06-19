@@ -11,18 +11,19 @@
 * **技术交流群** [250883130](http://shang.qq.com/wpa/qunwpa?idkey=17544199255998bda0d938fb72b08d076c40c52c9904520b76eb5eb0585da71e) 
 * **详细在线文档** [点击查看](https://www.kancloud.cn/zlt2000/microservices-platform/936236)
 * **演示地址**
-  * url： [http://120.78.94.191:8066](http://120.78.94.191:8066)
+  * url： [http://www.zltdiablo.cn:8066](http://www.zltdiablo.cn:8066)
   * 账号密码：admin/admin
   * 应用监控账号密码：admin/admin
   * 配置中心账号密码：nacos/nacos
   * APM监控账号密码：admin/admin
   * Grafana账号：zlt/zlt
+  * txlcn事务管理器密码：admin
+  * 任务管理账号密码：admin/123456
 * **演示环境有全方位的监控示例：日志系统 + APM系统 + GPE系统**
 * **[项目更新日志](https://www.kancloud.cn/zlt2000/microservices-platform/936235)**
 * **[文档更新日志](https://www.kancloud.cn/zlt2000/microservices-platform/936236)**
 * Gitee地址：https://gitee.com/zlt2000/microservices-platform
 * Github地址：https://github.com/zlt2000/microservices-platform
-
 * 前后端分离的企业级微服务架构
 * 基于`Spring Boot 2.0.X`、`Spring Cloud Finchley`和`Spring Cloud Alibaba`
 * 深度定制`Spring Security`真正实现了基于`RBAC`、`jwt`和`oauth2`的无状态统一权限认证的解决方案
@@ -31,11 +32,13 @@
 * 注重代码规范，严格控制包依赖，每个工程基本都是最小依赖
 * 非常适合学习和企业中使用
 
+> 重构于开源项目OCP&cp：https://gitee.com/owenwangwen/open-capacity-platform
+
 &nbsp;
 
 ## 2. 项目总体架构图
 
-![](https://gitee.com/zlt2000/images/raw/master/springcloud微服务架构图.jpg)
+![](http://processon.com/chart_image/5c7f2ad6e4b02b2ce48d6835.png?_=1554621571250)
 
 &nbsp;
 
@@ -47,29 +50,33 @@
   * 支持手机号加密码登录
   * 支持openId登录
   * 支持第三方系统单点登录
-
 * **分布式系统基础支撑**
-  * 服务注册发现、路由与负载均衡
-  * 服务降级与熔断
-  * 服务限流(url/方法级别)
-  * 统一配置中心
-  * 统一日志中心
-  * 统一分布式缓存操作类、cacheManager配置扩展
-  * 分布式锁
-  * 分布式任务调度器
-  * 支持CI/CD持续集成(包括前端和后端)
-  * 分布式高性能Id生成器
+  - 服务注册发现、路由与负载均衡
+  - 服务降级与熔断
+  - 服务限流(url/方法级别)
+  - 统一配置中心
+  - 统一日志中心
+  - 统一搜索中心
+  - 统一分布式缓存操作类、cacheManager配置扩展
+  - 分布式锁
+  - 分布式任务调度器
+  - 支持CI/CD持续集成(包括前端和后端)
+  - 分布式Id生成器
+  - 分布式事务(强一致性/最终一致性)
 * **系统监控功能**
-  * 服务调用链监控
-  * 应用拓扑图
-  * 慢服务检测
-  * 服务Metric监控
-  * 应用监控(应用健康、JVM、内存、线程)
-  * 错误日志查询
-  * 慢查询SQL监控
-  * 应用吞吐量监控(qps、rt)
-  * 服务降级、熔断监控
-  * 服务限流监控
+  - 服务调用链监控
+  - 应用拓扑图
+  - 慢查询SQL监控
+  - 应用吞吐量监控(qps、rt)
+  - 服务降级、熔断监控
+  - 服务限流监控
+  - 微服务服务监控
+  - 服务器监控
+  - redis监控
+  - mysql监控
+  - elasticSearch监控
+  - nacos监控
+  - prometheus监控
 * **业务基础功能支撑**
   * 高性能方法级幂等性支持
   * RBAC权限管理，实现细粒度控制(方法、url级别)
@@ -91,12 +98,14 @@ central-platform -- 父项目，公共依赖
 │  │  ├─user-center -- 用户中心[7000]
 │  │  ├─file-center -- 文件中心[5000]
 │  │  ├─code-generator -- 代码生成器[7300]
+│  │  ├─search-center -- 搜索中心
+│  │  │  ├─search-client -- 搜索中心客户端
+│  │  │  ├─search-server -- 搜索中心服务端[7100]
 │  │─zlt-commons -- 通用工具一级工程
 │  │  ├─zlt-auth-client-spring-boot-starter -- 封装spring security client端的通用操作逻辑
 │  │  ├─zlt-common-spring-boot-starter -- 封装通用操作逻辑
 │  │  ├─zlt-db-spring-boot-starter -- 封装数据库通用操作逻辑
 │  │  ├─zlt-log-spring-boot-starter -- 封装log通用操作逻辑
-│  │  ├─zlt-mq-spring-boot-starter -- 封装mq通用操作逻辑
 │  │  ├─zlt-redis-spring-boot-starter -- 封装Redis通用操作逻辑
 │  │  ├─zlt-ribbon-spring-boot-starter -- 封装Ribbon和Feign的通用操作逻辑
 │  │  ├─zlt-sentinel-spring-boot-starter -- 封装Sentinel的通用操作逻辑
@@ -104,7 +113,6 @@ central-platform -- 父项目，公共依赖
 │  ├─zlt-config -- 配置中心
 │  ├─zlt-doc -- 项目文档
 │  ├─zlt-gateway -- api网关一级工程
-│  │  ├─spring-cloud-gateway -- 开发中..
 │  │  ├─zuul-gateway -- netflix-zuul[9900]
 │  ├─zlt-job -- 分布式任务调度一级工程
 │  │  ├─job-admin -- 任务管理器[8081]
@@ -115,9 +123,14 @@ central-platform -- 父项目，公共依赖
 │  │  ├─log-center -- 日志中心[6200]
 │  ├─zlt-uaa -- spring-security认证中心[8000]
 │  ├─zlt-register -- 注册中心Nacos[8848]
-│  ├─zlt-search -- 搜索引擎一级工程
 │  ├─zlt-web -- 前端一级工程
 │  │  ├─back-web -- 后台前端[8066]
+│  ├─zlt-transaction -- 事务一级工程
+│  │  ├─txlcn-tm -- tx-lcn事务管理器[7970]
+│  ├─zlt-demo -- demo一级工程
+│  │  ├─txlcn-demo -- txlcn分布式事务demo
+│  │  ├─sharding-jdbc-demo -- sharding-jdbc分库分表demo
+│  │  ├─rocketmq-demo -- rocketmq和mq事务demo
 ```
 
 &nbsp;
@@ -125,6 +138,10 @@ central-platform -- 父项目，公共依赖
 ## 5. 截图（点击可大图预览）
 
 <table>
+    <tr>
+        <td><img src="https://gitee.com/zlt2000/images/raw/master/首页.png"/></td>
+        <td><img src="https://gitee.com/zlt2000/images/raw/master/用户搜索.png"/></td>
+    </tr>
 	<tr>
         <td><img src="https://gitee.com/zlt2000/images/raw/master/server_metrics.png"/></td>
         <td><img src="https://gitee.com/zlt2000/images/raw/master/application_metrics.png"/></td>

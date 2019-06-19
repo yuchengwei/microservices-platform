@@ -1,9 +1,4 @@
 spring:
-  redis:
-    host: ${zlt.redis.host}
-    port: ${zlt.redis.port}
-    timeout: ${zlt.redis.timeout}
-
   # sentinel动态配置规则
   cloud:
     sentinel:
@@ -113,7 +108,26 @@ zuul:
       path: /api-generator/**
       service-id: code-generator
       strip-prefix: true
+    search:
+      path: /api-search/**
+      service-id: search-center
+      strip-prefix: true
+      custom-sensitive-headers: true
   ssl-hostname-validation-enabled: false
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 100
+      maximumSize: 2000
+      allowMaximumSizeToDivergeFromCoreSize: true
+      maxQueueSize: -1
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
 
 swagger:
   butler:
